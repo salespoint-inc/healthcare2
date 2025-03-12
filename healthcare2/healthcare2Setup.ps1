@@ -417,8 +417,6 @@ if (-not $destinationSasKey.StartsWith('?')) { $destinationSasKey = "?$destinati
 
     $clusterId = $clusterId.cluster_id
 
-    $tenant = get-aztenant
-    $tenantid = $tenant.id
     $appdatabricks = az ad app create --display-name "healthcare2 $init" | ConvertFrom-Json
     $clientId = $appdatabricks.appId
     $appCredential = az ad app credential reset --id $clientId | ConvertFrom-Json
@@ -1777,13 +1775,13 @@ if (-not $destinationSasKey.StartsWith('?')) { $destinationSasKey = "?$destinati
     $config = az webapp config appsettings set -g $rgName -n $func_payor_generator_name --settings AzureWebJobsStorage=$webjobs
     $config = az webapp config appsettings set -g $rgName -n $func_payor_generator_name --settings FUNCTIONS_WORKER_RUNTIME="powershell"
     
-    cd func-realtime-payor-generator-hc2
-    func azure functionapp publish $func_payor_generator_name --powershell --force
-    cd ..
+    #cd func-realtime-payor-generator-hc2
+    #func azure functionapp publish $func_payor_generator_name --powershell --force
+    #cd ..
 
-    #Compress-Archive -Path "./func-realtime-payor-generator-hc2/*" -DestinationPath "./func-realtime-payor-generator-hc2.zip" -Update
-    #$TOKEN = az account get-access-token --query accessToken | tr -d '"'  
-    #$deployment = curl -X POST -H "Authorization: Bearer $TOKEN" -T "./func-realtime-payor-generator-hc2.zip" "https://$func_payor_generator_name.scm.azurewebsites.net/api/zipdeploy"
+    Compress-Archive -Path "./func-realtime-payor-generator-hc2/*" -DestinationPath "./func-realtime-payor-generator-hc2.zip" -Update
+    $TOKEN = az account get-access-token --query accessToken | tr -d '"'  
+    $deployment = curl -X POST -H "Authorization: Bearer $TOKEN" -T "./func-realtime-payor-generator-hc2.zip" "https://$func_payor_generator_name.scm.azurewebsites.net/api/zipdeploy"
     Start-Sleep -s 10
 
     ## Other Apps Deployment
