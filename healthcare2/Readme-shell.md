@@ -68,6 +68,13 @@ THIS DEMO/LAB PROVIDES CERTAIN SOFTWARE TECHNOLOGY/PRODUCT FEATURES AND FUNCTION
    - Microsoft.Databricks
    - Microsoft.Kusto
    - Microsoft.Purview
+   - Microsoft.CognitiveServices
+   - Microsoft.DocumentDB
+   - Microsoft.HealthcareApis
+   - Microsoft.Search
+   - Microsoft.Storage
+   - Microsoft.KeyVault
+   - Microsoft.Compute
 * You can run only one deployment at any point in time and need to wait for its completion. You should not run multiple deployments in parallel as that will cause deployment failures.
 * Select a region where the desired Azure Services are available. If certain services are not available, deployment may fail. See [Azure Services Global Availability](https://azure.microsoft.com/en-us/global-infrastructure/services/?products=all) for understanding target service availability. (consider the region availability for Synapse workspace, Iot Central and cognitive services while choosing a location)
 * Do not use any special characters or uppercase letters in the environment code. Also, do not re-use your environment code.
@@ -77,6 +84,19 @@ THIS DEMO/LAB PROVIDES CERTAIN SOFTWARE TECHNOLOGY/PRODUCT FEATURES AND FUNCTION
 * Please log in to Azure and Power BI using the same credentials.
 * Once the resources have been setup, please ensure that your AD user and synapse workspace have “Storage Blob Data Owner” role assigned on storage account name starting with “sthealthcare2...”. You need to contact AD admin to get this done.
 * Please review the [License Agreement](https://github.com/microsoft/Azure-Analytics-and-AI-Engagement/blob/main/CDP-Retail/license.md) before proceeding.
+* Should have access to create Entra ID group.
+
+## Enable PowerBI Tenant Settings
+
+1. Navigate to https://app.powerbi.com/home?experience=power-bi
+2. Click on **Settings** and select **Admin portal**.
+   
+![image](https://github.com/user-attachments/assets/9da72d10-0d0f-493a-ab62-017ceee980ed)
+
+3. Search for **service principal** and enable **Service principals can use Fabric APIs**.
+
+![image](https://github.com/user-attachments/assets/5cf701a4-0b59-4294-8372-15aa1c59b8ca)
+
 
 ## Before starting
 
@@ -457,7 +477,30 @@ In this task, you will create a Delta Live Table pipeline.
 
 	![Select Purview Resource.](media/purview-30.png)
 	
-11. **Run** the scans for AzureSynapseAnalytics, AzureSqlDatabase and PowerBI as well. 
+11. **Run** the scans for AzureSynapseAnalytics, AzureSqlDatabase and PowerBI as well.
+
+#### Scan: PowerBI
+
+1. Navigate back to the Azure portal
+2. Search and select Microsoft **Microsoft Entra ID**.
+
+![image](https://github.com/user-attachments/assets/108ef7b5-094a-446b-b9f6-307de89fb179)
+
+3. Click on **+Add** and select **Group**.
+
+![image](https://github.com/user-attachments/assets/a9c8d154-708e-4c21-9080-124b7b5b354c)
+
+4. Provide a name to Group and add **Purview managed identity** (starting with name "purviewhc2...") as **Memeber**.
+5. Navigate back to PowerBI and go to **Admin Portal**.
+
+![image](https://github.com/user-attachments/assets/9da72d10-0d0f-493a-ab62-017ceee980ed)
+
+6. Locate the search bar at the top-right of the settings page. Type "service principal" to filter the relevant settings.
+7. Find the section "Service principals can access read-only admin APIs" under Admin API settings. Toggle the switch to "Enabled" (if not already enabled).
+8. Select **Entra ID group** created earlier and click on **Apply**.
+
+![image](https://github.com/user-attachments/assets/70032202-233a-4836-8cd0-9a475f3eb39f)
+
 	
 ### Task 8: Power BI reports and dashboard creation
 
