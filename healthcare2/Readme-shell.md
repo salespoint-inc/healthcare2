@@ -93,10 +93,13 @@ THIS DEMO/LAB PROVIDES CERTAIN SOFTWARE TECHNOLOGY/PRODUCT FEATURES AND FUNCTION
    
 ![image](https://github.com/user-attachments/assets/9da72d10-0d0f-493a-ab62-017ceee980ed)
 
-3. Search for **service principal** and enable **Service principals can use Fabric APIs**.
+3. Search for **service principal** and enable **Service principals can use Fabric APIs** then apply the settings for **Entire organization**. Click on the **apply** button.
 
-![image](https://github.com/user-attachments/assets/5cf701a4-0b59-4294-8372-15aa1c59b8ca)
+![image](media/pbi-01.png)
 
+4. Search for **embed** and enable **Embed content in apps** then apply the settings for **Entire organization**. Click on the **apply** button.
+
+![image](media/pbi-02.png)
 
 ## Before starting
 
@@ -477,7 +480,124 @@ In this task, you will create a Delta Live Table pipeline.
 
 	![Select Purview Resource.](media/purview-30.png)
 	
-11. **Run** the scans for AzureSynapseAnalytics, AzureSqlDatabase and PowerBI as well.
+11. **Run** the scans for AzureSynapseAnalytics, Azure CosmosDB and PowerBI as well.
+
+#### Scan: AzureSynapseAnalytics
+
+1. Navigate back to the resource group, search for **Purview** and **copy** the name of the purview resource and keep it handy.
+ 
+![](./media/healthcare1.png)
+ 
+2. Search for **synapse** and **click** on the resource.
+ 
+![](./media/synapsesearch.png)
+ 
+3. Expand **Settings** and click on **Microsoft Entra ID**.
+ 
+![](./media/entraid.png)
+ 
+4. Click on **Set admin**
+ 
+![](./media/setadmin.png)
+ 
+5. **Paste** the purview resource name in the **search bar** which was copied in step number 1, Select the managed Identity and click on **Select**
+ 
+![](./media/identity.png)
+ 
+6. Click on **Save**.
+ 
+![](./media/setadmin2.png)
+
+7. Navigate back to the **Purview** portal and the **Scan** for **AzureSynapseAnalytics**.
+ 
+ 
+#### Scan: CosmosDB
+ 
+1. From Azure Portal, search for "Cosmos" in the resource group and click on the resource.
+ 
+![](./media/cosmoskey1.png)
+ 
+2. Search for **keys** and click on **keys** and then click on **eye icon** and copy the **PRIMARY KEY**.
+ 
+![](./media/cosmoskey2.png)
+ 
+3. Go back to the resource group and search for **kv-hc2** and click on **kv-hc3....** -resource.
+ 
+![](./media/cosmoskey3.png)
+ 
+4. Expand **Objects** and click on **Secrets** and then click on **+ Generate/Import**.
+ 
+![](./media/cosmoskey4.png)
+ 
+5. In the Nmae field paste **CosmosDBkey** and paste the PRIMARY KEY copied in step 2 in **Secret value** filed and then click on **Create**
+ 
+![](./media/cosmoskey5.png)
+ 
+ 
+ 
+11. Under the datasource CosmosDB click on **Delete icon**.
+ 
+![](./media/delcosmosdb.png)
+ 
+12. Click on **Confirm**
+ 
+![](./media/confirmdel.png)
+ 
+13. Click on **Register** icon of Azure CosmosDB.
+ 
+![](./media/regcosmos.png)
+ 
+14. Search for **Azure Cosmos DB** and select Azure cosmosDB and then click on **Continue**.
+ 
+![](./media/selcosmosdb.png)
+ 
+15. Select **Azure Subscription** from the list and select **CosmosDB** resource from the list and then click on **Register**.
+ 
+![](./media/regcosmos1.png)
+ 
+16. Click on **Scan icon** of Azure CosmosDB
+ 
+![](./media/scancosmosdb.png)
+ 
+17. Click on drop down of **Credential** and Click on **+ New**
+ 
+![](./media/newcred.png)
+ 
+18. Paste **Cosmosdbcredscan** in the Name field, and  In the drop down of **Key Vault Connection**, click on **+ New**.
+ 
+![](./media/newcred2.png)
+ 
+19. Paste **Keyvaulthc** in the Name field, Select Azure Subscription from the drop down of **Azure subscription** field and select **kv-hc2-....** for Key Vault name field and then click on **Create**.
+ 
+![](./media/newkeyvalut11.png)
+ 
+20. Paste **keyvaulthc2** in the Key Vault connection field and paste **CosmosDBkey** in the Secret name field and then click on **Create**.
+ 
+![](./media/newcred3.png)
+ 
+21. CLick on **Test connection**.
+ 
+![](./media/testcosmosdb.png)
+ 
+22. Click on **Continue**.
+ 
+![](./media/cosmosscan2.png)
+ 
+23. Click on **Continue**.
+ 
+![](./media/cosmosscan3.png)
+ 
+24. Click on **Continue**.
+ 
+![](./media/cosmosscan4.png)
+ 
+25. Select **Once** radio button and click on **Continue**.
+ 
+![](./media/cosmosscan5.png)
+ 
+26. Click on **Save and run**.
+ 
+![](./media/cosmosscan6.png)
 
 #### Scan: PowerBI
 
@@ -500,6 +620,8 @@ In this task, you will create a Delta Live Table pipeline.
 8. Select **Entra ID group** created earlier and click on **Apply**.
 
 ![image](https://github.com/user-attachments/assets/70032202-233a-4836-8cd0-9a475f3eb39f)
+
+9. Navigate back to the **Purview** portal and the **Scan** for **PowerBI**.
 
 	
 ### Task 8: Power BI reports and dashboard creation
@@ -733,7 +855,7 @@ To hide title and subtitle for all the **images** that you have pined above. Ple
 
 40. **Refer** to this table while pinning rest of the tiles to the dashboard.
 
-	![Table.](media/power-bi-table-6.png)
+	![Table.](media/pbi-03.png)
 
 41. Here is the list of Dashboards you have to create for Retail and the report to migrate to prod environment. You will see the necessary details for the same below. You must refer to the [Excel](https://github.com/microsoft/Azure-Analytics-and-AI-Engagement/blob/healthcare2/healthcare2/Dashboard%20Mapping.xlsx) file for pinning the tiles to the dashboard.
 
@@ -745,7 +867,7 @@ To hide title and subtitle for all the **images** that you have pined above. Ple
 	
 43. **Refer** to this table while pinning rest of the tiles to the dashboard.
 
-	![Table.](media/power-bi-table-1.png)
+	![Table.](media/pbi-04.png)
 	
 44. **Provider Dashboard (Before)** should look like this. Following are the details of tiles for the same.
 
@@ -753,7 +875,7 @@ To hide title and subtitle for all the **images** that you have pined above. Ple
 	
 45. **Refer** to this table while pinning rest of the tiles to the dashboard.
 
-	![Table.](media/power-bi-table-2.png)
+	![Table.](media/providerdashboardbefore.png)
 	
 46. **Provider Dashboard (After)** should look like this. Following are the details of tiles for the same.
 
@@ -761,7 +883,7 @@ To hide title and subtitle for all the **images** that you have pined above. Ple
 	
 47. **Refer** to this table while pinning rest of the tiles to the dashboard.
 
-	![Table.](media/power-bi-table-3.png)
+	![Table.](media/providerdashboardafter.png)
 
 
 ### Updating Dashboard and Report Ids in Web app
