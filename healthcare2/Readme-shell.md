@@ -262,36 +262,32 @@ cd ./healthcare2/healthcare2
 
 	![Authentication done.](media/cloud-shell-9.png)
 	
-14. You will see the below screen and perform step #9 to step #13 again.
+14. Now you will be prompted to select subscription if you have multiple subscription assigned to the user you used for device login. Enter the **subscription number** from the list and press enter.
 
-	![Authentication done.](media/cloud-shell-21.png)
+![Authentication done.](media/selsub1.png)
 
-15. Now you will be prompted to select subscription if you have multiple subscription assigned to the user you used for device login.
-
-    ![Close the browser tab.](media/select-sub.png)
-	
 	> **Notes:**
 	> - The user with single subscription won't be prompted to select subscription.
 	> - The subscription highlighted in yellow will be selected by default if you do not enter any disired subscription. Please select the subscription carefully, as it may break the execution further.
 	> - While you are waiting for processes to get completed in the Azure Cloud Shell window, you'll be asked to enter the code three times. This is necessary for performing installation of various Azure Services and preloading content in the Azure Synapse Analytics SQL Pool tables.
 
-16. You will be asked to confirm for the subscription, **enter** 'Y' and **press** the enter key.
+15. You will see the below screen and perform step #9 to step #14 again.
 
-	![Commands to run the PowerShell Script.](media/cloud-shell-19.png)
+	![Authentication done.](media/cloud-shell-21.png)
 
-17. You will now be prompted to **enter** the resource group name in the Azure Cloud Shell. **Type** the same resource group name that you created in [Task 1](#task-1-create-a-resource-group-in-azure). – 'DPoC-Healthcare2'.
+16. You will now be prompted to **enter** the resource group name in the Azure Cloud Shell. **Type** the same resource group name that you created in [Task 1](#task-1-create-a-resource-group-in-azure). – 'DPoC-Healthcare2'.
 
 	![Enter Resource Group name.](media/cloud-shell-14.png)
 
-18. After the complete script has been executed, you get to see the message "--Execution Complete--", now **go to** the Azure Portal and **search** for "app service" and **click** on the simulator app by the name "app-patient-data-simulator-...".
+17. After the complete script has been executed, you get to see the message "--Execution Complete--", now **go to** the Azure Portal and **search** for "app service" and **click** on the simulator app by the name "app-patient-data-simulator-...".
 
 	![Enter Resource Group name.](media/cloud-shell-16.png)
 	
-19. **Click** on the browse button of the app service.
+18. **Click** on the browse button of the app service.
 
 	![Enter Resource Group name.](media/cloud-shell-17.png)
 
-20. A new window will appear as shown in the below screenshot. Wait for the page to load and **close** the tab.
+19. A new window will appear as shown in the below screenshot. Wait for the page to load and **close** the tab.
 
 	![Enter Resource Group name.](media/cloud-shell-17.1.png)
 
@@ -301,35 +297,43 @@ cd ./healthcare2/healthcare2
 
 	![Adx.](media/adx-1.png)
 	
-2. In the data explorer resource **copy** the URI.
+2. In the data explorer resource, click on  **copy** the URI.
 
 	![Adx.](media/adx-2.png)
-	
-3. **Open** a new tab in the browser and **paste** the URI in the search bar, the data explorer studio opens.
-	
-	![Adx.](media/adx-3.png)
+
+3. Scroll down and click on **Ingest new data**
+
+![Adx.](media/kusto1.png)
 	
 4. In the Data Explorer Studio under Data section **click** on Ingest data.
 
 	![Adx.](media/adx-4.png)
 	
-5. In the Ingest data, under destination tab, **select** appropriate values in the respective fields, in Cluster **select** the kusto pool name as "hc2kustopool...", in the Database select "HC2KustoDB..." database, in the Table field **enter** the table name i.e. "operationalanalytics" and then **click** on Next.
+5. In the Ingest data, under destination tab,click on **Add connection**.
 
-	![Adx.](media/adx-5.png)
+![Adx.](media/kusto2.png)
+
+6. In the Add connection tab, paste the **URI** copied in step 2 in **Connection URL** field and click on **Add**.
+
+![Adx.](media/kusto3.png)
+
+7. **select** appropriate values in the respective fields, in the Database select "HC2KustoDB..." database, in the Table field **enter** the table name i.e. "operationalanalytics" and then **click** on **Next: Source**.
+
+![Adx.](media/kusto4.png)
 	
-6. Under the source tab, **select** Source type as "Event Hub", in subscription **select** your subscription, in Event Hub Namespace **select** you eventhub namespace i.e. "evh-patient-monitoring-hc2-...", in Event Hub **enter** "operational-analytics", in Data connection name **select** "HC2KustoDB...-operational-analytics", in Consumer group **select** $Default and then **click** on Next.
+8. Under the source tab, **select** Source type as "Event Hub", in subscription **select** your subscription, in Event Hub Namespace **select** you eventhub namespace i.e. "evh-patient-monitoring-hc2-...", in Event Hub **enter** "operational-analytics", in Data connection name **select** "HC2KustoDB...-operational-analytics", in Consumer group **select** $Default and then **click** on Next.
 
 	![Adx.](media/adx-6.png)
 	
-7. Wait for some time for data preview to load, **select** JSON in the "Data format" section and then **click** on Next: Start Ingestion.
+9. Wait for some time for data preview to load, **select** JSON in the "Data format" section and then **click** on Next: Start Ingestion.
 
 	![Adx.](media/adx-7.png)
 	
-8. Once the Continuous ingestion from Event Hub has been established, **click** on Close.
+10. Once the Continuous ingestion from Event Hub has been established, **click** on Close.
 
 	![Adx.](media/adx-8.png)
 	
-9. Repeat the above step from 4 to 8, replacing few values, i.e. in step 5, this time **enter** the table name as "monitoringdevice", in step 6 **enter** Event Hub as "monitoring-device" and Data connection name as "HC2KustoDB...-monitoring-device".
+11. Repeat the above steps starting from  step 3,4 and then step 7 to 10, replacing few values, i.e. in step 7, this time **enter** the table name as "monitoringdevice", in step 8 **enter** Event Hub as "monitoring-device" and Data connection name as "HC2KustoDB...-monitoring-device".
 
 ### Task 6: Azure Databricks Setup
 
@@ -345,25 +349,25 @@ In this task, you will create a Delta Live Table pipeline.
 
 	![Databricks.](media/databricks-2.png)
 
-3. On the left navigation pane, **select** Workspace and **click** on Initial setup.ipynb notebook.
+3. On the left navigation pane, **select** Workspace and **click** on Workspace and then **click** on Initial setup.ipynb notebook.
 
-	![Select Workflows](media/databricks-2.1.png)
+	![Select Workflows](media/azuredatabricks1.png)
 
 4. **Click** on Run all, a new window will pop-up.
 
 	![Select Workflows](media/databricks-2.2.png)
 
-5. **Click** on Attach and run, the notebook will start executing.
+5. **Click** on Start, attach and run, the notebook will start executing.
 
-	![Select Workflows](media/databricks-2.3.png)
+	![Select Workflows](media/azuredatabricks2.png)
 
-6. On the left navigation pane, **select** the Workflows icon.
+6. On the left navigation pane, **select** the **Workflows** icon.
 
-	![Select Workflows](media/databricks-3.png)
+	![Select Workflows](media/azuredatabricks3.png)
 
-7.	**Select** the Delta Live Tables tab and **click** Create Pipeline.
+7.	**click** the pipelines tab and **click** on Create Pipeline and then **click** on ETL pipeline.
 
-	![Select Workflows](media/databricks-4.png)
+	![Select Workflows](media/azuredatabricks4.png)
 
 8.	In the Create pipeline window, in the Pipeline name box, **enter** DLT Pipeline.
 
@@ -389,9 +393,9 @@ In this task, you will create a Delta Live Table pipeline.
 
 	![Select Notebook](media/databricks-10.png)
       
-14.	Under the Destination section, in the Storage location box, **enter**: /mnt/delta-files and **click** on Create.
+14.	Under the Destination section, in the Storage location box, **enter**: /mnt/delta-files , in the Default schema **enter** dbo and **click** on Create.
 
-	![Select Notebook](media/databricks-11.png)
+	![Select Notebook](media/azuredatabricks5.png)
 
 *Once you select **Create**, it will create the Delta Live Table pipeline with all the notebook libraries added to the pipeline.*
 
@@ -439,6 +443,38 @@ In this task, you will create a Delta Live Table pipeline.
 ### Task 7: Azure Purview Setup
 
 > **Note:** Firstly you should assign Reader permission to the Azure Purview account starting with name "purviewhc2..." for Cosmos Account, Synapse Workspace and Storage Account starting with name "sthealthcare2...". Once the permission has been granted, proceed with the following steps.
+
+
+1. Navigate back to the resource group, search for **Purview** and **copy** the name of the purview resource and keep it handy.
+ 
+![](./media/healthcare1.png)
+ 
+2. Search for **storage** and **click** on the **sthealthcare2...** resource.
+ 
+![](./media/adlspermissions1.png)
+ 
+3. Click on **Access Control(IAM)** and click on **Add** and then click on **Add role assignment**.
+ 
+![](./media/adlspermissions2.png)
+ 
+4. Search for **Storage Blob Data Owner** and select **Storage Blob Data Owner** and then click on **Members**
+ 
+![](./media/adlspermissions3.png)
+ 
+5. Select **Managed identity** for Assign access to, click on **+Select members**, in the Subscription fiels **select** the Subscription and in the Manage identity field select **All system-assigned managed identities** and in the Select field **Paste** the purview resource name in the **search bar** which was copied in step number 1, Select the managed Identity and click on **Select**
+ 
+![](./media/adlspermissions4.png)
+
+ 
+6. Click on **Review+assign**.
+ 
+![](./media/adlspermissions5.png)
+
+7. Click on **Review+assign**.
+ 
+![](./media/adlspermissions6.png)
+
+#### Scan: AzureDataLakeStorage
 
 1. From Azure Portal, **search** for "purview" in the resource group and **click** on the resource.
 
@@ -504,11 +540,27 @@ In this task, you will create a Delta Live Table pipeline.
  
 ![](./media/identity.png)
  
-6. Click on **Save**.
+6. Click on **Save** and theh click on **Access control(IAM)**.
  
 ![](./media/setadmin2.png)
 
-7. Navigate back to the **Purview** portal and the **Scan** for **AzureSynapseAnalytics**.
+7. Click on **+ Add** and then click on **Add role assignment**.
+
+![](./media/synapse1.png)
+
+8. Under the **Assign access to** field, select **User, group, or service principal**, click on **+ Select members**, search for the Purview resource copied in Step 1, select the resource, and then click **Select**.
+
+![](./media/synapse2.png)
+
+9. Click on **Review + assign**.
+
+![](./media/synapse3.png)
+
+10. Click on **Review + assign**.
+
+![](./media/synapse4.png)
+
+11. Navigate back to the **Purview** portal and the **Scan** for **AzureSynapseAnalytics**.
  
  
 #### Scan: CosmosDB
@@ -535,67 +587,67 @@ In this task, you will create a Delta Live Table pipeline.
  
  
  
-11. Under the datasource CosmosDB click on **Delete icon**.
+6. Go back to the purview portal, Under the datasource CosmosDB click on **Delete icon**.
  
 ![](./media/delcosmosdb.png)
  
-12. Click on **Confirm**
+7. Click on **Confirm**
  
 ![](./media/confirmdel.png)
  
-13. Click on **Register** icon of Azure CosmosDB.
+8. Click on **Register** icon of Azure CosmosDB.
  
 ![](./media/regcosmos.png)
  
-14. Search for **Azure Cosmos DB** and select Azure cosmosDB and then click on **Continue**.
+9. Search for **Azure Cosmos DB** and select Azure cosmosDB and then click on **Continue**.
  
 ![](./media/selcosmosdb.png)
  
-15. Select **Azure Subscription** from the list and select **CosmosDB** resource from the list and then click on **Register**.
+10. Select **Azure Subscription** from the list and select **CosmosDB** resource from the list and then click on **Register**.
  
 ![](./media/regcosmos1.png)
  
-16. Click on **Scan icon** of Azure CosmosDB
+11. Click on **Scan icon** of Azure CosmosDB
  
 ![](./media/scancosmosdb.png)
  
-17. Click on drop down of **Credential** and Click on **+ New**
+12. Click on drop down of **Credential** and Click on **+ New**
  
 ![](./media/newcred.png)
  
-18. Paste **Cosmosdbcredscan** in the Name field, and  In the drop down of **Key Vault Connection**, click on **+ New**.
+13. Paste **Cosmosdbcredscan** in the Name field, and  In the drop down of **Key Vault Connection**, click on **+ New**.
  
 ![](./media/newcred2.png)
  
-19. Paste **Keyvaulthc** in the Name field, Select Azure Subscription from the drop down of **Azure subscription** field and select **kv-hc2-....** for Key Vault name field and then click on **Create**.
+14. Paste **Keyvaulthc** in the Name field, Select Azure Subscription from the drop down of **Azure subscription** field and select **kv-hc2-....** for Key Vault name field and then click on **Create**.
  
 ![](./media/newkeyvalut11.png)
  
-20. Paste **keyvaulthc2** in the Key Vault connection field and paste **CosmosDBkey** in the Secret name field and then click on **Create**.
+15. Paste **keyvaulthc2** in the Key Vault connection field and paste **CosmosDBkey** in the Secret name field and then click on **Create**.
  
 ![](./media/newcred3.png)
  
-21. CLick on **Test connection**.
+16. CLick on **Test connection**.
  
 ![](./media/testcosmosdb.png)
  
-22. Click on **Continue**.
+17. Click on **Continue**.
  
 ![](./media/cosmosscan2.png)
  
-23. Click on **Continue**.
+18. Click on **Continue**.
  
 ![](./media/cosmosscan3.png)
  
-24. Click on **Continue**.
+19. Click on **Continue**.
  
 ![](./media/cosmosscan4.png)
  
-25. Select **Once** radio button and click on **Continue**.
+20. Select **Once** radio button and click on **Continue**.
  
 ![](./media/cosmosscan5.png)
  
-26. Click on **Save and run**.
+21. Click on **Save and run**.
  
 ![](./media/cosmosscan6.png)
 
@@ -636,7 +688,7 @@ Once [Task 4](#task-4-run-the-cloud-shell-to-provision-the-demo-resources) has b
 
 The image on the below shows the Reports tab in Power BI.  We can create a Power BI dashboard by pinning visuals from these reports.
 
-![Reports Tab.](media/power-bi-report-4.png)
+![Reports Tab.](media/power-bi-report-4.1.png)
 	
 > **Note:** If you do not see this list in your workspace after script execution, it may indicate that something went wrong during execution. You may use the subscript to patch it or manually upload the reports from this location and changing their parameters appropriately before authentication.
 
@@ -648,17 +700,17 @@ To give permissions for the Power BI reports to access the data sources:
 
 	![Permission.](media/power-bi-report-5.png)
 
-5. **Click** on ‘Datasets’ tab.
+5. **Click** on ‘Semantic models’ tab.
 	
-	![Dataset.](media/power-bi-report-6.png)
+	![Dataset.](media/power-bi-report-6.1.png)
 	
-6. **Click** on the dataset "Healthcare - Bed Occupancy".
+6. **Click** on the Semantic model "Healthcare - Bed Occupancy".
 
 7. **Expand** Data source credentials.
 
 8. **Click** Edit credentials and a dialogue box will pop up.
 
-	![Data Source Creds.](media/power-bi-report-7.png)
+	![Data Source Creds.](media/power-bi-report-7.1.png)
 
 > **Note:** Verify the server name has been updated to your current sql pool name for all the datasets. If not, update the same under parameters section and click apply.
 
@@ -680,7 +732,7 @@ To give permissions for the Power BI reports to access the data sources:
 
 15. **Click** Edit credentials in front of AzureBlob and a dialogue box will pop up.
 
-	![Data Source Creds.](media/power-bi-report-01.png)
+	![Data Source Creds.](media/power-bi-report-01.1.png)
 
 16. **Select** Authentication method as "OAuth2" and Privacy level as "Organisational" and **Click** on Sign in, a new window will pop-up.
 
@@ -728,11 +780,11 @@ To give permissions for the Power BI reports to access the data sources:
 
 	![Select Workspace.](media/power-bi-report-9.png)
 	
-2. **Click** on ‘+ New’ button on the top-right navigation bar.
+2. **Click** on ‘+ New iteam’ button on the top-left navigation bar.
 
-3. **Click** the ‘Dashboard’ option from the drop-down menu.
+3. **Search** for ‘Dashboard’ and click on Dashboard.
 
-      ![New Dashboard.](media/power-bi-report-10.png)
+      ![New Dashboard.](media/power-bi-report-10.1.png)
 
 4. **Name** the dashboard 'Payor Executive Dashboard Before' and **click** 'create'.
 
@@ -745,143 +797,141 @@ To give permissions for the Power BI reports to access the data sources:
 6. **Open** the URL in a new browser tab to get JSON code for a custom theme:
 [https://raw.githubusercontent.com/microsoft/Azure-Analytics-and-AI-Engagement/healthcare2/healthcare2/CustomTheme.json](https://github.com/microsoft/Azure-Analytics-and-AI-Engagement/blob/healthcare2/healthcare2/CustomTheme.json)
 
-7. **Right click** anywhere in browser and **click** 'Save as...'.
+7. Click on **Download icon**.
 
-8. **Save** the file to your desired location on your computer, leaving the name unchanged.
+![Save the File.](media/theme01.png)
 
-	![Save the File.](media/theme1.png)
+8. **Go back** to the Power BI dashboard you just created.
 
-9. **Go back** to the Power BI dashboard you just created.
+9. **Click** on the “Edit” at the top right-side corner.
 
-10. **Click** on the “Edit” at the top right-side corner.
-
-11. **Click** on “Dashboard theme”.
+10. **Click** on “Dashboard theme”.
 
 	![Click on Dashboard Theme.](media/theme2.png)
 
-12. **Click** ‘Upload the JSON theme’.
+11. **Click** ‘Upload the JSON theme’.
 
-13. **Navigate** to the location where you saved the JSON theme file in the steps above and **select** open.
+12. **Navigate** to the location where you saved the JSON theme file in the steps above and **select** open.
 
-14. **Click** Save.
+13. **Click** Save.
 
 	![Navigate Select and Click Save.](media/theme3.png)
 
 **Follow these steps to pin the report to the Power BI dashboard:**
 
-15. **Search** the report 'Payor Dashboard report' and then **click** on the report to open it.
+14. **Search** the report 'Payor Dashboard report' and then **click** on the report to open it.
 
 	![Create Dashboard further steps.](media/power-bi-report-12.png)
 
-16. Inside the report 'Payor Dashboard report' **goto** "Financial Analytics - Before" tab and **click** on 'Edit' at the top of the right corner.
+15. Inside the report 'Payor Dashboard report' **goto** "Financial Analytics - Before" tab and **click** on 'Edit' at the top of the right corner.
 
 	![Select Pillar 1 before.](media/power-bi-report-13.png)
 
-17. **Click** over the tile and **click** on the icon to 'Pin to dashboard'.
+16. **Click** over the tile and **click** on the icon to 'Pin to dashboard'.
 
 	![Select Pillar 1 before.](media/power-bi-report-14.png)	
 
-18. 'Pin to dashboard' window will appear.
+17. 'Pin to dashboard' window will appear.
 
-19. **Select** the 'Existing Dashboard' radio button.
+18. **Select** the 'Existing Dashboard' radio button.
 
-20. **Select** the existing dashboard 'Payor Executive Dashboard Before' and **click** on the 'Pin' button.
+19. **Select** the existing dashboard 'Payor Executive Dashboard Before' and **click** on the 'Pin' button.
 
 	![Select Pin to dashboard.](media/power-bi-report-15.png)
 
-21. Similarly, **pin** the others tiles to the Dashboard
+20. Similarly, **pin** the others tiles to the Dashboard
 
 	![Pin to dashboard further steps.](media/power-bi-report-16.png)
 	
-22. Similarly, **pin** the other tiles from different tabs of 'Payor Dashboard report' to the Dashboard.
+21. Similarly, **pin** the other tiles from different tabs of 'Payor Dashboard report' to the Dashboard.
 
-23. **Select** workpace created in [Task 2](#task-2-power-bi-workspace-creation) in the left pane.
+22. **Select** workpace created in [Task 2](#task-2-power-bi-workspace-creation) in the left pane.
 
 	![Select Workspace.](media/power-bi-report-18.png)
 	
-24. **Open** ‘Healthcare Dashbaord Images-Final’ report.
+23. **Open** ‘Healthcare Dashbaord Images-Final’ report.
 
 	![Select Workspace.](media/power-bi-report-19.png)
 	
-25. **Click** on Edit.
+24. **Click** on Edit.
 
 	![Click on edit.](media/power-bi-report-20.png)
 
-26. **Click** on 'image' page.
+25. **Click** on 'image' page.
 	
-27. **Hover** on Deep Dive chicklet and **click** pin button.
+26. **Hover** on Deep Dive chicklet and **click** pin button.
 
 	![Hover and Click.](media/power-bi-report-21.png)
 	
-28. Select the ‘Payor Executive Dashboard Before’ from existing dashboard list and **click** on pin.
+27. Select the ‘Payor Executive Dashboard Before’ from existing dashboard list and **click** on pin.
 	
 	![Hover and Click.](media/power-bi-report-22.png)
 
-29. Similarly pin rest of the images from different tabs of the ‘Healthcare Dashbaord Images-Final’ report.
+28. Similarly pin rest of the images from different tabs of the ‘Healthcare Dashbaord Images-Final’ report.
 	
-30. **Go back** to the ‘Payor Executive Dashboard Before’ dashboard.
+29. **Go back** to the ‘Payor Executive Dashboard Before’ dashboard.
 
 	![Go back to Dashboard.](media/power-bi-report-24.png)
 	
 To hide title and subtitle for all the **images** that you have pined above. Please do the following:
 
-31. Hover on the chiclet and **Click** on ellipsis ‘More Options’ of the image you selected.
+30. Hover on the chiclet and **Click** on ellipsis ‘More Options’ of the image you selected.
 
-32. **Click** on ‘Edit details’.
+31. **Click** on ‘Edit details’.
 
 	![Click on Edit Details.](media/power-bi-report-25.png)
 	
-33. **Uncheck** ‘Display title and subtitle’.
+32. **Uncheck** ‘Display title and subtitle’.
 
-34. **Click** on ‘Apply’.
+33. **Click** on ‘Apply’.
 
-35. **Repeat** Step 25 to 34 for all image tiles.
+34. **Repeat** Step 25 to 34 for all image tiles.
 
 	![Click apply and repeat.](media/power-bi-report-26.png)
 	
-36. After disabling ‘Display title and subtitle’ for all images, **resize** and **rearrange** the top images tiles as shown in the screenshot. 
+35. After disabling ‘Display title and subtitle’ for all images, **resize** and **rearrange** the top images tiles as shown in the screenshot. 
 	
 	![Resize and Rearrange.](media/power-bi-report-27.png)
 	
-37. Similarly pin left image tiles from ‘Healthcare Dashbaord Images-Final’ of chicklets report to the "Payor Executive Dashboard Before" Dashboard.
+36. Similarly pin left image tiles from ‘Healthcare Dashbaord Images-Final’ of chicklets report to the "Payor Executive Dashboard Before" Dashboard.
 
-38. **Resize** and **rearrange** the left images tiles as shown in the screenshot. Resize the KPI tile to 1x2. Resize the Deep Dive to 1x4. Resize the logo to 1x1 size; resize other vertical tiles to 2x1 size.  
+37. **Resize** and **rearrange** the left images tiles as shown in the screenshot. Resize the KPI tile to 1x2. Resize the Deep Dive to 1x4. Resize the logo to 1x1 size; resize other vertical tiles to 2x1 size.  
 
 	![Resize and Rearrange again.](media/power-bi-report-28.png)
 
-39. The Dashboard **Payor Executive Dashboard Before** should finally look like this. Table in following row indicates which KPI’s need to be pinned from which report to achieve this final look.
+38. The Dashboard **Payor Executive Dashboard Before** should finally look like this. Table in following row indicates which KPI’s need to be pinned from which report to achieve this final look.
 	
 	![Final Look.](media/power-bi-report-38.png)
 
-40. **Refer** to this table while pinning rest of the tiles to the dashboard.
+39. **Refer** to this table while pinning rest of the tiles to the dashboard.
 
 	![Table.](media/pbi-03.png)
 
-41. Here is the list of Dashboards you have to create for Retail and the report to migrate to prod environment. You will see the necessary details for the same below. You must refer to the [Excel](https://github.com/microsoft/Azure-Analytics-and-AI-Engagement/blob/healthcare2/healthcare2/Dashboard%20Mapping.xlsx) file for pinning the tiles to the dashboard.
+40. Here is the list of Dashboards you have to create for Retail and the report to migrate to prod environment. You will see the necessary details for the same below. You must refer to the [Excel](https://github.com/microsoft/Azure-Analytics-and-AI-Engagement/blob/healthcare2/healthcare2/Dashboard%20Mapping.xlsx) file for pinning the tiles to the dashboard.
 
 	![Final Look.](media/power-bi-report-33.png)
 
-42. **Payor Executive Dashboard After** should look like this. Following are the details of tiles for the same.
+41. **Payor Executive Dashboard After** should look like this. Following are the details of tiles for the same.
 
 	![Final Look.](media/power-bi-report-32.png)
 	
-43. **Refer** to this table while pinning rest of the tiles to the dashboard.
+42. **Refer** to this table while pinning rest of the tiles to the dashboard.
 
 	![Table.](media/pbi-04.png)
 	
-44. **Provider Dashboard (Before)** should look like this. Following are the details of tiles for the same.
+43. **Provider Dashboard (Before)** should look like this. Following are the details of tiles for the same.
 
 	![Final Look.](media/power-bi-report-34.png)
 	
-45. **Refer** to this table while pinning rest of the tiles to the dashboard.
+44. **Refer** to this table while pinning rest of the tiles to the dashboard.
 
 	![Table.](media/providerdashboardbefore.png)
 	
-46. **Provider Dashboard (After)** should look like this. Following are the details of tiles for the same.
+45. **Provider Dashboard (After)** should look like this. Following are the details of tiles for the same.
 
 	![Final Look.](media/power-bi-report-35.png)
 	
-47. **Refer** to this table while pinning rest of the tiles to the dashboard.
+46. **Refer** to this table while pinning rest of the tiles to the dashboard.
 
 	![Table.](media/providerdashboardafter.png)
 
