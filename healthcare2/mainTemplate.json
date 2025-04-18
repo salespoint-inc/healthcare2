@@ -63,7 +63,9 @@
         "serverfarm_asp_openai_name": "[concat('asp-open-ai-',variables('unique_suffix'))]",
         "app_openai_name": "[concat('app-open-ai-',variables('unique_suffix'))]",
         "serverfarm_asp_healthcare2_name": "[concat('asp-healthcare2-',variables('unique_suffix'))]",
-        "app_healthcare2_name": "[concat('app-healthcare2-',variables('unique_suffix'))]"
+        "app_healthcare2_name": "[concat('app-healthcare2-',variables('unique_suffix'))]",
+        "funstorageAccountName": "stfunchc2",
+        "func_copilot" : "[concat('func-copilot-hc2-',variables('unique_suffix'))]"
     },
     "resources": [
         {
@@ -2413,7 +2415,153 @@
                 "siteName": "[variables('app_healthcare2_name')]",
                 "hostNameType": "Verified"
             }
-        }
+        },
+        {
+            "type": "Microsoft.Storage/storageAccounts",
+            "apiVersion": "2022-05-01",
+            "name": "[variables('funstorageAccountName')]",
+            "location": "[variables('location')]",
+            "dependsOn": [],
+            "tags": {},
+            "sku": {
+              "name": "Standard_LRS"
+            },
+            "properties": {
+              "supportsHttpsTrafficOnly": true,
+              "minimumTlsVersion": "TLS1_2",
+              "defaultToOAuthAuthentication": true
+            }
+          },
+          {
+            "type": "Microsoft.Web/sites",
+            "apiVersion": "2022-03-01",
+            "name": "[variables('func_copilot')]",
+            "location": "[variables('location')]",
+            "dependsOn": [
+              "[concat('Microsoft.Web/serverfarms/', variables('serverfarm_asp_healthcare2_name'))]",
+              "[concat('Microsoft.Storage/storageAccounts/', variables('funstorageAccountName'))]"
+            ],
+            "tags": {},
+            "kind": "functionapp,linux",
+            "properties": {
+              "name": "[variables('func_copilot')]",
+              "siteConfig": {
+                "appSettings": [
+                  {
+                    "name": "FUNCTIONS_EXTENSION_VERSION",
+                    "value": "~4"
+                  },
+                  {
+                    "name": "FUNCTIONS_WORKER_RUNTIME",
+                    "value": "python"
+                  },
+                  {
+                    "name": "AzureWebJobsStorage",
+                    "value": "[concat('DefaultEndpointsProtocol=https;AccountName=',variables('funstorageAccountName'),';AccountKey=',listKeys(resourceId('Microsoft.Storage/storageAccounts', variables('funstorageAccountName')), '2019-06-01').keys[0].value,';EndpointSuffix=','core.windows.net')]"
+                  }
+                ],
+                "cors": {
+                  "allowedOrigins": [
+                    "https://portal.azure.com"
+                  ]
+                },
+                "use32BitWorkerProcess": "bool",
+                "ftpsState": "FtpsOnly",
+                "linuxFxVersion": "Python|3.11"
+              },
+              "clientAffinityEnabled": false,
+              "virtualNetworkSubnetId": null,
+              "publicNetworkAccess": "Enabled",
+              "httpsOnly": true,
+              "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', variables('serverfarm_asp_healthcare2_name'))]"
+            }
+          },
+          {
+            "type": "Microsoft.Web/sites/config",
+            "apiVersion": "2023-12-01",
+            "name": "[concat(variables('func_copilot'), '/web')]",
+            "location": "East US 2",
+            "dependsOn": [
+              "[resourceId('Microsoft.Web/sites', variables('func_copilot'))]"
+            ],
+            "properties": {
+              "numberOfWorkers": 1,
+              "defaultDocuments": [
+                "Default.htm",
+                "Default.html",
+                "Default.asp",
+                "index.htm",
+                "index.html",
+                "iisstart.htm",
+                "default.aspx",
+                "index.php"
+              ],
+              "netFrameworkVersion": "v4.0",
+              "linuxFxVersion": "Python|3.11",
+              "requestTracingEnabled": false,
+              "remoteDebuggingEnabled": false,
+              "httpLoggingEnabled": false,
+              "acrUseManagedIdentityCreds": false,
+              "logsDirectorySizeLimit": 35,
+              "detailedErrorLoggingEnabled": false,
+              "publishingUsername": "REDACTED",
+              "scmType": "None",
+              "use32BitWorkerProcess": false,
+              "webSocketsEnabled": false,
+              "alwaysOn": true,
+              "managedPipelineMode": "Integrated",
+              "virtualApplications": [
+                {
+                  "virtualPath": "/",
+                  "physicalPath": "site\\wwwroot",
+                  "preloadEnabled": false
+                }
+              ],
+              "loadBalancing": "LeastRequests",
+              "experiments": {
+                "rampUpRules": []
+              },
+              "autoHealEnabled": false,
+              "vnetRouteAllEnabled": false,
+              "vnetPrivatePortsCount": 0,
+              "publicNetworkAccess": "Enabled",
+              "cors": {
+                "allowedOrigins": [
+                  "*"
+                ],
+                "supportCredentials": false
+              },
+              "localMySqlEnabled": false,
+              "ipSecurityRestrictions": [
+                {
+                  "ipAddress": "Any",
+                  "action": "Allow",
+                  "priority": 2147483647,
+                  "name": "Allow all",
+                  "description": "Allow all access"
+                }
+              ],
+              "scmIpSecurityRestrictions": [
+                {
+                  "ipAddress": "Any",
+                  "action": "Allow",
+                  "priority": 2147483647,
+                  "name": "Allow all",
+                  "description": "Allow all access"
+                }
+              ],
+              "scmIpSecurityRestrictionsUseMain": false,
+              "http20Enabled": false,
+              "minTlsVersion": "1.2",
+              "scmMinTlsVersion": "1.2",
+              "ftpsState": "FtpsOnly",
+              "preWarmedInstanceCount": 0,
+              "functionAppScaleLimit": 200,
+              "functionsRuntimeScaleMonitoringEnabled": false,
+              "minimumElasticInstanceCount": 0,
+              "azureStorageAccounts": {}
+            }
+          }
     ],
     "outputs": {}
 }

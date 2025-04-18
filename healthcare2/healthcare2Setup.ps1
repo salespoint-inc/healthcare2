@@ -159,6 +159,8 @@ else {
     {
     $openAIResource = $openAIResource.substring(0,24)
     }
+    $funstorageAccountName = "stfunchc2"
+    $func_copilot = "func-copilot-hc2-$suffix"
 
     $storage_account_key = (Get-AzStorageAccountKey -ResourceGroupName $rgName -AccountName $dataLakeAccountName)[0].Value
 
@@ -1345,7 +1347,8 @@ if (-not $destinationSasKey.StartsWith('?')) { $destinationSasKey = "?$destinati
     $forms_hc2_endpoint = "https://"+$forms_healthcare2_name+".cognitiveservices.azure.com/"
     
     #delpoying a model
-    $openAIModel = az cognitiveservices account deployment create -g $rgName -n $openAIResource --deployment-name "text-davinci-003" --model-name "text-davinci-003" --model-version "1" --model-format OpenAI --scale-settings-scale-type "Standard"
+    #$openAIModel = az cognitiveservices account deployment create -g $rgName -n $openAIResource --deployment-name "text-davinci-003" --model-name "text-davinci-003" --model-version "1" --model-format OpenAI --scale-settings-scale-type "Standard"
+    $openAIModel = az cognitiveservices account deployment create -g $rgName -n $openAIResource --deployment-name "gpt-4" --model-name "gpt-4" --model-version "0613" --model-format OpenAI --sku-capacity 30 --sku-name "Standard" 
 
     $filepath="./artifacts/amlnotebooks/Configurable.py"
     $itemTemplate = Get-Content -Path $filepath
@@ -1801,7 +1804,25 @@ if (-not $destinationSasKey.StartsWith('?')) { $destinationSasKey = "?$destinati
 
     $deployment = curl -X POST -H "Authorization: Bearer $TOKEN_5" -T "./app-open-ai.zip" "https://$sites_open_ai_name.scm.azurewebsites.net/api/publish?type=zip"
     #Publish-AzWebApp -ResourceGroupName $rgName -Name $sites_open_ai_name -ArchivePath ./app-open-ai.zip -Force
-    
+
+    ##Copilot Func app
+     Write-Information "Deploying Copilot func app"
+    $config = az webapp config appsettings set -g $rgName -n $func_copilot --settings AZURE_OPENAI_API_BASE=$openAIEndpoint
+    $config = az webapp config appsettings set -g $rgName -n $func_copilot --settings AZURE_OPENAI_MODEL="gpt-4"
+    $config = az webapp config appsettings set -g $rgName -n $func_copilot --settings AZURE_OPENAI_SERVICE=$openAIResource
+    $config = az webapp config appsettings set -g $rgName -n $func_copilot --settings AZURE_OPENAI_SERVICE_KEY=$openAIPrimaryKey
+    $config = az webapp config appsettings set -g $rgName -n $func_copilot --settings AZURE_OPENAI_TYPE="azure"
+    $config = az webapp config appsettings set -g $rgName -n $func_copilot --settings AZURE_OPENAI_VERSION="2024-08-01-preview"
+
+    Write-Host "Uploading function app build, it may take upto 5 min..."
+    $TOKEN_6 = az account get-access-token --query accessToken | tr -d '"'  
+    $deployment = curl -X POST -H "Authorization: Bearer $TOKEN_6" -T "./artifacts/binaries/func-copilot.zip" "https://$func_copilot.scm.azurewebsites.net/api/zipdeploy"
+
+    if ([string]::IsNullOrEmpty($deployment)) {
+    Write-Output "Deployment response empty. Retrying..."
+    $deployment = curl -X POST -H "Authorization: Bearer $TOKEN_6" -T "./artifacts/binaries/func-copilot.zip" "https://$func_copilot.scm.azurewebsites.net/api/zipdeploy"
+    }
+
     az webapp start --name $sites_doc_search_name --resource-group $rgName
     az webapp start --name $sites_clinical_notes_name --resource-group $rgName
     az webapp start --name $sites_open_ai_name --resource-group $rgName

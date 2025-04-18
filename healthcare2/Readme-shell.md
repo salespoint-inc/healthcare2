@@ -85,6 +85,9 @@ THIS DEMO/LAB PROVIDES CERTAIN SOFTWARE TECHNOLOGY/PRODUCT FEATURES AND FUNCTION
 * Once the resources have been setup, please ensure that your AD user and synapse workspace have “Storage Blob Data Owner” role assigned on storage account name starting with “sthealthcare2...”. You need to contact AD admin to get this done.
 * Please review the [License Agreement](https://github.com/microsoft/Azure-Analytics-and-AI-Engagement/blob/main/CDP-Retail/license.md) before proceeding.
 * Should have access to create Entra ID group.
+* Ensure that the **GPT-4 model** is available in the Azure region where you are deploying the solution.
+* Ensure that you have at least a **30K token quota** available for **GPT-4** in the selected region.
+* Follow this official guide to verify your Azure OpenAI quota and model access:[Check model and quota availability in Azure OpenAI](https://learn.microsoft.com/en-us/azure/ai-services/openai/quotas-limits?tabs=REST)
 
 ## Enable PowerBI Tenant Settings
 
@@ -100,6 +103,10 @@ THIS DEMO/LAB PROVIDES CERTAIN SOFTWARE TECHNOLOGY/PRODUCT FEATURES AND FUNCTION
 4. Search for **embed** and enable **Embed content in apps** then apply the settings for **Entire organization**. Click on the **apply** button.
 
 ![image](media/pbi-02.png)
+
+5. Search for **map** and enable **Use Azure Maps visual** and click on the **apply** button.
+
+![image](media/n1.png)
 
 ## Before starting
 
