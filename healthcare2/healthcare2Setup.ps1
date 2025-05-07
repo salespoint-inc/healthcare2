@@ -79,8 +79,9 @@ else {
     az login
 
     #for powershell...
-    Connect-AzAccount -DeviceCode
-    $starttime = get-date
+   $subscriptionId = (az account show --query id --output tsv)
+   Connect-AzAccount -UseDeviceAuthentication -Subscription $subscriptionId 
+   $starttime = get-date
     
 
     $response = az ad signed-in-user show | ConvertFrom-Json
@@ -1317,7 +1318,7 @@ if (-not $destinationSasKey.StartsWith('?')) { $destinationSasKey = "?$destinati
     Write-Host "-----Form Recognizer-----"
 
     #  install the requests library using pip
-    pip install requests
+    pip install requests --user 
 
     $dataLakeContext = New-AzStorageContext -StorageAccountName $dataLakeAccountName -StorageAccountKey $storage_account_key
 
@@ -1370,18 +1371,20 @@ if (-not $destinationSasKey.StartsWith('?')) { $destinationSasKey = "?$destinati
 
     #create aml workspace
     az extension add -n azure-cli-ml
-    az ml workspace create -n $amlworkspacename -g $rgName
+    az ml workspace create -n $amlworkspacename -g $rgName -l $Region
 
     #attach a folder to set resource group and workspace name (to skip passing ws and rg in calls after this line)
-    az ml folder attach -w $amlworkspacename -g $rgName -e aml
+    az configure --defaults group=$rgName workspace=$amlworkspacename location=$Region
     start-sleep -s 10
 
     #create and delete a compute instance to get the code folder created in default store
-    az ml computetarget create computeinstance -n $cpuShell -s "STANDARD_DS2_V2" -v
+    az ml compute create --name $cpuShell --size "STANDARD_DS2_V2" --type AmlCompute
 
     #get default data store
-    $defaultdatastore = az ml datastore show-default --resource-group $rgName --workspace-name $amlworkspacename --output json | ConvertFrom-Json
-    $defaultdatastoreaccname = $defaultdatastore.account_name
+    $datastores = az ml datastore list --resource-group $rgName --workspace-name $amlworkspacename --output json | ConvertFrom-Json
+
+    $defaultDatastore = $datastores | Where-Object { $_.name -eq "workspaceblobstore" }
+    $defaultdatastoreaccname = $defaultDatastore.account_name
 
     #get fileshare and code folder within that
     $storageAcct = Get-AzStorageAccount -ResourceGroupName $rgName -Name $defaultdatastoreaccname
@@ -1418,7 +1421,7 @@ if (-not $destinationSasKey.StartsWith('?')) { $destinationSasKey = "?$destinati
     }
 
     #delete aks compute
-    az ml computetarget delete -n $cpuShell -v
+    az ml compute delete -n $cpuShell -y
 
     ##Establish powerbi reports dataset connections
     Add-Content log.txt "------pbi connections update------"
@@ -1742,7 +1745,7 @@ if (-not $destinationSasKey.StartsWith('?')) { $destinationSasKey = "?$destinati
     $payorRealtimePrimaryKey = az eventhubs eventhub authorization-rule keys list --resource-group $rgName --namespace-name $namespaces_evh_patient_monitoring_name --eventhub-name "payor-realtime-data" --name "realtime" | ConvertFrom-Json
     $payorRealtimePrimaryKey = $payorRealtimePrimaryKey.primaryKey
 
-(Get-Content -path func-realtime-payor-generator-hc2/TimerTrigger1/run.ps1 -Raw) | Foreach-Object { $_ `
+   (Get-Content -path func-realtime-payor-generator-hc2/TimerTrigger1/run.ps1 -Raw) | Foreach-Object { $_ `
             -replace '#NAMESPACE_THERMOSTAT_OCCUPANCY#', $namespaces_evh_patient_monitoring_name`
             -replace '#EVENTHUB_ACCESS_POLICY_KEY#', $payorRealtimePrimaryKey`
     } | Set-Content -Path func-realtime-payor-generator-hc2/TimerTrigger1/run.ps1

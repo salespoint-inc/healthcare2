@@ -185,6 +185,8 @@ THIS DEMO/LAB PROVIDES CERTAIN SOFTWARE TECHNOLOGY/PRODUCT FEATURES AND FUNCTION
 
 6. **Enter** the Power BI workspace ID copied in step 6 of [Task 2](#task-2-power-bi-workspace-creation).
 
+7. Enter a location where **GPT-4 model** is available and have at least a **30K token quota** available.
+
 7. **Click** ‘Review + Create’ button.
 
 	![The Custom deployment form is displayed with example data populated.](media/powerbi-deployment-1.png)

@@ -19,6 +19,12 @@
             "metadata": {
                 "description": "PowerBi workspace Id."
             }
+        },
+        "openailocation" : {
+            "type": "String",
+            "metadata": {
+                "description": "Enter location where GPT-4 model is available and have at least a 30K token quota available."
+            }
         }
     },
     "variables": {
@@ -84,7 +90,7 @@
             "type": "Microsoft.CognitiveServices/accounts",
             "apiVersion": "2022-12-01",
             "name": "[variables('accounts_open_ai_name')]",
-            "location": "[variables('location')]",
+            "location": "[parameters('openailocation')]",
             "sku": {
                 "name": "S0"
             },
@@ -149,7 +155,7 @@
             "type": "Microsoft.DocumentDB/databaseAccounts",
             "apiVersion": "2022-11-15",
             "name": "[variables('cosmos_healthcare2_name')]",
-            "location": "Central US",
+            "location": "[variables('location')]",
             "kind": "GlobalDocumentDB",
             "identity": {
                 "type": "None"
@@ -179,7 +185,7 @@
                 },
                 "locations": [
                     {
-                        "locationName": "Central US",
+                        "locationName": "[variables('location')]",
                         "provisioningState": "Succeeded",
                         "failoverPriority": 0,
                         "isZoneRedundant": false
@@ -569,7 +575,7 @@
             "type": "Microsoft.EventHub/namespaces/eventhubs/consumergroups",
             "apiVersion": "2022-10-01-preview",
             "name": "[concat(variables('namespaces_evh_patient_monitoring_name'), '/payor-realtime-data/deltadata-asa_payor-realtime_consumer_group')]",
-            "location": "eastus2",
+            "location": "[variables('location')]",
             "dependsOn": [
                 "[resourceId('Microsoft.EventHub/namespaces/eventhubs', variables('namespaces_evh_patient_monitoring_name'), 'payor-realtime-data')]",
                 "[resourceId('Microsoft.EventHub/namespaces', variables('namespaces_evh_patient_monitoring_name'))]"

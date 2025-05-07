@@ -7,37 +7,12 @@ function RefreshTokens() {
     $global:purviewToken = ((az account get-access-token --resource https://purview.azure.net) | ConvertFrom-Json).accessToken
 }
 
-az login
+    az login
 
-#for powershell...
-Connect-AzAccount -DeviceCode
+    #for powershell...
+   $subscriptionId = (az account show --query id --output tsv)
+   Connect-AzAccount -UseDeviceAuthentication -Subscription $subscriptionId 
 
-$subs = Get-AzSubscription | Select-Object -ExpandProperty Name
-if ($subs.GetType().IsArray -and $subs.length -gt 1) {
-    $subOptions = [System.Collections.ArrayList]::new()
-    for ($subIdx = 0; $subIdx -lt $subs.length; $subIdx++) {
-        $opt = New-Object System.Management.Automation.Host.ChoiceDescription "$($subs[$subIdx])", "Selects the $($subs[$subIdx]) subscription."   
-        $subOptions.Add($opt)
-    }
-    $selectedSubIdx = $host.ui.PromptForChoice('Enter the desired Azure Subscription for this lab', 'Copy and paste the name of the subscription to make your choice.', $subOptions.ToArray(), 0)
-    $selectedSubName = $subs[$selectedSubIdx]
-    Write-Host "Selecting the subscription : $selectedSubName "
-    $title = 'Subscription selection'
-    $question = 'Are you sure you want to select this subscription for this lab?'
-    $choices = '&Yes', '&No'
-    $decision = $Host.UI.PromptForChoice($title, $question, $choices, 1)
-    if ($decision -eq 0) {
-        Select-AzSubscription -SubscriptionName $selectedSubName
-        az account set --subscription $selectedSubName
-    }
-    else {
-        $selectedSubIdx = $host.ui.PromptForChoice('Enter the desired Azure Subscription for this lab', 'Copy and paste the name of the subscription to make your choice.', $subOptions.ToArray(), 0)
-        $selectedSubName = $subs[$selectedSubIdx]
-        Write-Host "Selecting the subscription : $selectedSubName "
-        Select-AzSubscription -SubscriptionName $selectedSubName
-        az account set --subscription $selectedSubName
-    }
-}
 
 $rgName = read-host "Enter the resource Group Name";
 $Region = (Get-AzResourceGroup -Name $rgName).Location
@@ -125,19 +100,21 @@ Set-Content -Path $filepath -Value $item
 # az cognitiveservices account delete --name MyopenAIResource -g OAIResourceGroup
 
 #create aml workspace
-az extension add -n azure-cli-ml
-az ml workspace create -n $amlworkspacename -g $rgName
+    az extension add -n azure-cli-ml
+    az ml workspace create -n $amlworkspacename -g $rgName -l $Region
 
-#attach a folder to set resource group and workspace name (to skip passing ws and rg in calls after this line)
-az ml folder attach -w $amlworkspacename -g $rgName -e aml
-start-sleep -s 10
+    #attach a folder to set resource group and workspace name (to skip passing ws and rg in calls after this line)
+    az configure --defaults group=$rgName workspace=$amlworkspacename location=$Region
+    start-sleep -s 10
 
-#create and delete a compute instance to get the code folder created in default store
-az ml computetarget create computeinstance -n $cpuShell -s "STANDARD_DS2_V2" -v
+    #create and delete a compute instance to get the code folder created in default store
+    az ml compute create --name $cpuShell --size "STANDARD_DS2_V2" --type AmlCompute
 
-#get default data store
-$defaultdatastore = az ml datastore show-default --resource-group $rgName --workspace-name $amlworkspacename --output json | ConvertFrom-Json
-$defaultdatastoreaccname = $defaultdatastore.account_name
+    #get default data store
+    $datastores = az ml datastore list --resource-group $rgName --workspace-name $amlworkspacename --output json | ConvertFrom-Json
+
+    $defaultDatastore = $datastores | Where-Object { $_.name -eq "workspaceblobstore" }
+    $defaultdatastoreaccname = $defaultDatastore.account_name
 
 #get fileshare and code folder within that
 $storageAcct = Get-AzStorageAccount -ResourceGroupName $rgName -Name $defaultdatastoreaccname
@@ -174,4 +151,4 @@ foreach ($notebook in $notebooks) {
 }
 
 #delete aks compute
-az ml computetarget delete -n $cpuShell -v
+az ml compute delete -n $cpuShell -y
