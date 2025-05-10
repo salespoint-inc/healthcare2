@@ -1052,7 +1052,9 @@ By default, the web app will be provisioned with Gif placeholders for web app sc
 > **Note:** You may be prompted to select your subscription if you have multiple subscriptions.
 	
 > **Note:** The setup for your Dream PoC Accelerator is done here and now you can follow the demo script for testing/demoing your environment.
-	
+
+-->
+ 
 ### Task 9: Pause or Resume script
 
 > **Note:** Please perform these steps after your demo is done and you do not need the environment anymore. Also ensure you Resume the environment before demo if you paused it once. 
@@ -1102,7 +1104,6 @@ By default, the web app will be provisioned with Gif placeholders for web app sc
 
 	![Enter your choice.](media/authentication-4.png)
 
--->
 
 ### Task 10: Clean up resources
 
