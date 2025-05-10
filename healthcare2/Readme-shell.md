@@ -277,10 +277,11 @@ cd ./healthcare2/healthcare2
 
 ![Authentication done.](media/selsub1.png)
 
-	> **Notes:**
-	> - The user with single subscription won't be prompted to select subscription.
-	> - The subscription highlighted in yellow will be selected by default if you do not enter any disired subscription. Please select the subscription carefully, as it may break the execution further.
-	> - While you are waiting for processes to get completed in the Azure Cloud Shell window, you'll be asked to enter the code three times. This is necessary for performing installation of various Azure Services and preloading content in the Azure Synapse Analytics SQL Pool tables.
+	
+ > **Notes:**
+> - The user with single subscription won't be prompted to select subscription.
+> - The subscription highlighted in yellow will be selected by default if you do not enter any disired subscription. Please select the subscription carefully, as it may break the execution further.
+> - While you are waiting for processes to get completed in the Azure Cloud Shell window, you'll be asked to enter the code three times. This is necessary for performing installation of various Azure Services and preloading content in the Azure Synapse Analytics SQL Pool tables.
 
 15. You will see the below screen and perform step #9 to step #14 again.
 
