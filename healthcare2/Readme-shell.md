@@ -49,7 +49,6 @@ THIS DEMO/LAB PROVIDES CERTAIN SOFTWARE TECHNOLOGY/PRODUCT FEATURES AND FUNCTION
   	- [Steps to validate the credentials for reports](#steps-to-validate-the-credentials-for-reports)
   	- [Steps to create realtime reports](#steps-to-create-realtime-reports)
   	- [Follow these steps to create the Power BI dashboard](#follow-these-steps-to-create-the-power-bi-dashboard)
-  	- [Updating Dashboard and Report Ids in Web app](#updating-dashboard-and-report-ids-in-web-app)
   - [Task 9: Pause or Resume script](#task-9-pause-or-resume-script)
   - [Task 10: Clean up resources](#task-10-clean-up-resources)
 
@@ -947,7 +946,7 @@ To hide title and subtitle for all the **images** that you have pined above. Ple
 
 	![Table.](media/providerdashboardafter.png)
 
-
+<!--
 ### Updating Dashboard and Report Ids in Web app
 
 By default, the web app will be provisioned with Gif placeholders for web app screens with dashboards. Once you have completed the steps listed above in this section, you can update the dashboard id’s generated into the main web app if you choose. Here are the steps for it.
@@ -1102,6 +1101,8 @@ By default, the web app will be provisioned with Gif placeholders for web app sc
 11. Wait for the script to finish execution. 
 
 	![Enter your choice.](media/authentication-4.png)
+
+-->
 
 ### Task 10: Clean up resources
 
